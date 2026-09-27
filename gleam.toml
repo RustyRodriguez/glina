@@ -1,0 +1,13 @@
+name = "glina"
+version = "1.0.0"
+
+description = "Gleam Linear Algebra"
+licences = ["MIT"]
+repository = { type = "github", user = "RustyRodriguez", repo = "glina" }
+links = [{ title = "Website", href = "https://github.com/RustyRodriguez/glina" }]
+
+[dependencies]
+gleam_stdlib = ">= 1.0.0 and < 2.0.0"
+
+[dev_dependencies]
+gleeunit = ">= 1.0.0 and < 2.0.0"
