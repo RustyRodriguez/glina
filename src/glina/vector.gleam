@@ -10,7 +10,7 @@ pub opaque type Vector {
 }
 
 pub fn from_list(nums: List(Float)) -> Result(Vector, VectorError) {
-    Ok(Vector(nums: nums))
+  Ok(Vector(nums: nums))
 }
 
 pub fn get(vector: Vector, index: Int) -> Result(Float, VectorError) {
