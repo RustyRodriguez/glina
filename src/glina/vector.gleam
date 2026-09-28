@@ -3,6 +3,7 @@ import gleam/list
 pub type VectorError {
   NegativeSize(size: Int)
   IndexOutOfBounds(index: Int, size: Int)
+  DimensionMismatch(left_size: Int, right_size: Int)
 }
 
 pub opaque type Vector {
@@ -43,4 +44,38 @@ pub fn ones(size: Int) -> Result(Vector, VectorError) {
     True -> Error(NegativeSize(size))
     False -> Ok(Vector(nums: list.repeat(1.0, size)))
   }
+}
+
+pub fn add(v1: Vector, v2: Vector) -> Result(Vector, VectorError) {
+  let v1_size = size(v1)
+  let v2_size = size(v2)
+  case v1_size != v2_size {
+    True -> Error(DimensionMismatch(v1_size, v2_size))
+    False -> {
+      Ok(
+        Vector(
+          nums: list.map2(v1.nums, v2.nums, fn(left, right) { left +. right }),
+        ),
+      )
+    }
+  }
+}
+
+pub fn subtract(v1: Vector, v2: Vector) -> Result(Vector, VectorError) {
+  let v1_size = size(v1)
+  let v2_size = size(v2)
+  case v1_size != v2_size {
+    True -> Error(DimensionMismatch(v1_size, v2_size))
+    False -> {
+      Ok(
+        Vector(
+          nums: list.map2(v1.nums, v2.nums, fn(left, right) { left -. right }),
+        ),
+      )
+    }
+  }
+}
+
+pub fn scale(vector: Vector, factor: Float) -> Vector {
+  Vector(list.map(vector.nums, fn(value) { value *. factor }))
 }
