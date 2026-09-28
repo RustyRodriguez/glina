@@ -9,6 +9,10 @@ pub opaque type Vector {
   Vector(nums: List(Float))
 }
 
+pub fn from_list(nums: List(Float)) -> Result(Vector, VectorError) {
+    Ok(Vector(nums: nums))
+}
+
 pub fn get(vector: Vector, index: Int) -> Result(Float, VectorError) {
   let size = list.length(vector.nums)
 
