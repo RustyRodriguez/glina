@@ -143,11 +143,18 @@ pub fn get_returns_error_when_index_equals_size_test() {
   assert vector.get(values, 3) == Error(vector.IndexOutOfBounds(3, 3))
 }
 
-pub fn scale_by_zero_factor_returns_zero_vector_test() {
-  let assert Ok(values) = vector.from_list([1.0, 2.0, 3.0])
-  let scaled_values = vector.scale(values, 3.0)
+pub fn dot_with_matching_sizes_returns_dot_product_test() {
+  let assert Ok(v1) = vector.from_list([1.0, 2.0, 3.0])
+  let assert Ok(v2) = vector.from_list([5.0, 2.0, 4.0])
+
+  let assert Ok(dot_product) = vector.dot(v1, v2)
+
+  assert dot_product == 21.0
 }
 
-pub fn scale_by_negative_factor_multiplies_each_element_test() {
-  todo
+pub fn dot_with_mismatched_sizes_returns_error_test() {
+  let assert Ok(v1) = vector.from_list([1.0, 2.0, 3.0])
+  let assert Ok(v2) = vector.from_list([5.0, 2.0, 4.0, 5.0])
+
+  assert vector.dot(v1, v2) == Error(vector.DimensionMismatch(3, 4))
 }
