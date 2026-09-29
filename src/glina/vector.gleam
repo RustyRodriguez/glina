@@ -79,3 +79,22 @@ pub fn subtract(v1: Vector, v2: Vector) -> Result(Vector, VectorError) {
 pub fn scale(vector: Vector, factor: Float) -> Vector {
   Vector(list.map(vector.nums, fn(value) { value *. factor }))
 }
+
+pub fn dot(v1: Vector, v2: Vector) -> Result(Float, VectorError) {
+  let v1_size = size(v1)
+  let v2_size = size(v2)
+  case v1_size != v2_size {
+    True -> Error(DimensionMismatch(v1_size, v2_size))
+    False ->
+      Ok(
+        list.fold(
+          over: list.zip(v1.nums, v2.nums),
+          from: 0.0,
+          with: fn(sum, pair) {
+            let #(left, right) = pair
+            sum +. left *. right
+          },
+        ),
+      )
+  }
+}
