@@ -31,12 +31,17 @@ pub fn shape(mat: Matrix) -> #(Int, Int) {
 }
 
 pub fn get(mat: Matrix, row: Int, column: Int) -> Result(Float, MatrixError) {
-  case list.drop(mat.rows, row) {
-    [row_values, ..] ->
-      case list.drop(row_values, column) {
-        [value, ..] -> Ok(value)
+  case row < 0 || column < 0 {
+    True -> Error(IndexOutOfBounds(row, column))
+    False -> {
+      case list.drop(mat.rows, row) {
+        [row_values, ..] ->
+          case list.drop(row_values, column) {
+            [value, ..] -> Ok(value)
+            [] -> Error(IndexOutOfBounds(row, column))
+          }
         [] -> Error(IndexOutOfBounds(row, column))
       }
-    [] -> Error(IndexOutOfBounds(row, column))
+    }
   }
 }
