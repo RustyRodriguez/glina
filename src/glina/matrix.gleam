@@ -8,6 +8,8 @@ pub type MatrixError {
   InvalidRows(List(List(Float)))
   EmptyMatrix(List(List(Float)))
   IndexOutOfBounds(Int, Int)
+  RowIndexOutOfBounds(Int)
+  ColumnIndexOutOfBounds(Int)
 }
 
 pub fn from_rows(rows: List(List(Float))) -> Result(Matrix, MatrixError) {
@@ -42,6 +44,32 @@ pub fn get(mat: Matrix, row: Int, column: Int) -> Result(Float, MatrixError) {
           }
         [] -> Error(IndexOutOfBounds(row, column))
       }
+    }
+  }
+}
+
+pub fn get_row(mat: Matrix, index: Int) -> Result(List(Float), MatrixError) {
+  case index < 0 {
+    True -> Error(RowIndexOutOfBounds(index))
+    False -> {
+      case list.drop(mat.rows, index) {
+        [row, ..] -> Ok(row)
+        [] -> Error(RowIndexOutOfBounds(index))
+      }
+    }
+  }
+}
+
+pub fn get_column(mat: Matrix, index: Int) -> Result(List(Float), MatrixError) {
+  case index < 0 {
+    True -> Error(ColumnIndexOutOfBounds(index))
+    False -> {
+      list.try_map(mat.rows, fn(row) {
+        case list.drop(row, index) {
+          [value, ..] -> Ok(value)
+          [] -> Error(ColumnIndexOutOfBounds(index))
+        }
+      })
     }
   }
 }
