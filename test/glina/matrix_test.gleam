@@ -73,3 +73,78 @@ pub fn get_returns_error_for_column_past_end_test() {
 
   assert matrix.get(mat, 1, 3) == Error(matrix.IndexOutOfBounds(1, 3))
 }
+
+pub fn get_row_returns_requested_row_test() {
+  let rows = [[1.0, 3.0, 7.0], [2.0, 4.0, 6.0], [8.0, 9.0, 10.0]]
+
+  let assert Ok(mat) = matrix.from_rows(rows)
+
+  let assert Ok(first) = matrix.get_row(mat, 0)
+  let assert Ok(second) = matrix.get_row(mat, 1)
+  let assert Ok(third) = matrix.get_row(mat, 2)
+
+  assert first == [1.0, 3.0, 7.0]
+  assert second == [2.0, 4.0, 6.0]
+  assert third == [8.0, 9.0, 10.0]
+}
+
+pub fn get_row_returns_error_for_negative_index_test() {
+  let rows = [[1.0, 3.0, 7.0], [2.0, 4.0, 6.0], [8.0, 9.0, 10.0]]
+
+  let assert Ok(mat) = matrix.from_rows(rows)
+
+  assert matrix.get_row(mat, -1) == Error(matrix.RowIndexOutOfBounds(-1))
+}
+
+pub fn get_row_returns_error_for_index_past_end_test() {
+  let rows = [[1.0, 3.0, 7.0], [2.0, 4.0, 6.0], [8.0, 9.0, 10.0]]
+
+  let assert Ok(mat) = matrix.from_rows(rows)
+
+  assert matrix.get_row(mat, 3) == Error(matrix.RowIndexOutOfBounds(3))
+}
+
+pub fn get_column_returns_requested_column_test() {
+  let rows = [[1.0, 3.0, 7.0], [2.0, 4.0, 6.0], [8.0, 9.0, 10.0]]
+
+  let assert Ok(mat) = matrix.from_rows(rows)
+
+  let assert Ok(first) = matrix.get_column(mat, 0)
+  let assert Ok(second) = matrix.get_column(mat, 1)
+  let assert Ok(third) = matrix.get_column(mat, 2)
+
+  assert first == [1.0, 2.0, 8.0]
+  assert second == [3.0, 4.0, 9.0]
+  assert third == [7.0, 6.0, 10.0]
+}
+
+pub fn get_column_returns_error_for_negative_index_test() {
+  let rows = [[1.0, 3.0, 7.0], [2.0, 4.0, 6.0], [8.0, 9.0, 10.0]]
+
+  let assert Ok(mat) = matrix.from_rows(rows)
+
+  assert matrix.get_column(mat, -1) == Error(matrix.ColumnIndexOutOfBounds(-1))
+}
+
+pub fn get_column_returns_error_for_index_past_end_test() {
+  let rows = [[1.0, 3.0, 7.0], [2.0, 4.0, 6.0], [8.0, 9.0, 10.0]]
+
+  let assert Ok(mat) = matrix.from_rows(rows)
+
+  assert matrix.get_column(mat, -1) == Error(matrix.ColumnIndexOutOfBounds(-1))
+}
+
+pub fn transpose_swaps_rows_and_columns_test() {
+  let rows = [[1.0, 3.0, 7.0], [2.0, 4.0, 6.0], [8.0, 9.0, 10.0]]
+
+  let assert Ok(mat) = matrix.from_rows(rows)
+  let assert Ok(transposed_mat) = matrix.transpose(mat)
+
+  let assert Ok(first) = matrix.get_row(transposed_mat, 0)
+  let assert Ok(second) = matrix.get_row(transposed_mat, 1)
+  let assert Ok(third) = matrix.get_row(transposed_mat, 2)
+
+  assert first == [1.0, 2.0, 8.0]
+  assert second == [3.0, 4.0, 9.0]
+  assert third == [7.0, 6.0, 10.0]
+}

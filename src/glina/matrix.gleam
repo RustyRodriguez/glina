@@ -73,3 +73,32 @@ pub fn get_column(mat: Matrix, index: Int) -> Result(List(Float), MatrixError) {
     }
   }
 }
+
+pub fn transpose(mat: Matrix) -> Result(Matrix, MatrixError) {
+  let #(_, column_count) = shape(mat)
+
+  case transpose_columns(mat, 0, column_count, []) {
+    Error(error) -> Error(error)
+    Ok(rows) -> Ok(Matrix(rows))
+  }
+}
+
+fn transpose_columns(
+  mat: Matrix,
+  column_index: Int,
+  column_count: Int,
+  accumulated_rows: List(List(Float)),
+) -> Result(List(List(Float)), MatrixError) {
+  case column_index >= column_count {
+    True -> Ok(list.reverse(accumulated_rows))
+    False ->
+      case get_column(mat, column_index) {
+        Error(error) -> Error(error)
+        Ok(column) ->
+          transpose_columns(mat, column_index + 1, column_count, [
+            column,
+            ..accumulated_rows
+          ])
+      }
+  }
+}
