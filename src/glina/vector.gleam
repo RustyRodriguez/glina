@@ -87,14 +87,12 @@ pub fn dot(v1: Vector, v2: Vector) -> Result(Float, VectorError) {
     True -> Error(DimensionMismatch(v1_size, v2_size))
     False ->
       Ok(
-        list.fold(
-          over: list.zip(v1.nums, v2.nums),
-          from: 0.0,
-          with: fn(sum, pair) {
-            let #(left, right) = pair
-            sum +. left *. right
-          },
-        ),
+        list.zip(v1.nums, v2.nums)
+        |> list.map(fn(pair) {
+          let #(x, y) = pair
+          x *. y
+        })
+        |> list.fold(0.0, fn(acc, x) { acc +. x }),
       )
   }
 }

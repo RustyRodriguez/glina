@@ -131,7 +131,7 @@ pub fn get_column_returns_error_for_index_past_end_test() {
 
   let assert Ok(mat) = matrix.from_rows(rows)
 
-  assert matrix.get_column(mat, -1) == Error(matrix.ColumnIndexOutOfBounds(-1))
+  assert matrix.get_column(mat, 3) == Error(matrix.ColumnIndexOutOfBounds(3))
 }
 
 pub fn transpose_swaps_rows_and_columns_test() {
@@ -147,4 +147,23 @@ pub fn transpose_swaps_rows_and_columns_test() {
   assert first == [1.0, 2.0, 8.0]
   assert second == [3.0, 4.0, 9.0]
   assert third == [7.0, 6.0, 10.0]
+}
+
+pub fn multiply_returns_expected_product_test() {
+  let assert Ok(m1) = matrix.from_rows([[1.0, 2.0], [3.0, 4.0]])
+  let assert Ok(m2) = matrix.from_rows([[5.0, 6.0, 7.0], [8.0, 9.0, 10.0]])
+  let assert Ok(expected) =
+    matrix.from_rows([[21.0, 24.0, 27.0], [47.0, 54.0, 61.0]])
+
+  let assert Ok(product) = matrix.multiply(m1, m2)
+
+  assert product == expected
+}
+
+pub fn matrix_multiply_returns_error_for_incompatible_dimensions_test() {
+  let assert Ok(m1) = matrix.from_rows([[1.0, 2.0], [3.0, 4.0]])
+  let assert Ok(m2) =
+    matrix.from_rows([[5.0, 6.0, 7.0], [8.0, 9.0, 10.0], [1.0, 1.0, 1.0]])
+
+  assert matrix.multiply(m1, m2) == Error(matrix.DimensionMismatch(2, 3))
 }
