@@ -10,6 +10,16 @@ pub type MatrixError {
   IndexOutOfBounds(Int, Int)
   RowIndexOutOfBounds(Int)
   ColumnIndexOutOfBounds(Int)
+  DimensionMismatch(Int, Int)
+}
+
+fn dot(l1: List(Float), l2: List(Float)) -> Float {
+  list.zip(l1, l2)
+  |> list.map(fn(pair) {
+    let #(x, y) = pair
+    x *. y
+  })
+  |> list.fold(0.0, fn(acc, x) { acc +. x })
 }
 
 pub fn from_rows(rows: List(List(Float))) -> Result(Matrix, MatrixError) {
@@ -100,5 +110,24 @@ fn transpose_columns(
             ..accumulated_rows
           ])
       }
+  }
+}
+
+pub fn multiply(m1: Matrix, m2: Matrix) -> Result(Matrix, MatrixError) {
+  let #(_, m1_columns) = shape(m1)
+  let #(m2_rows, _) = shape(m2)
+
+  case m1_columns != m2_rows {
+    True -> Error(DimensionMismatch(m1_columns, m2_rows))
+    False -> {
+      let columns = list.transpose(m2.rows)
+
+      let result =
+        list.map(m1.rows, fn(row) {
+          list.map(columns, fn(column) { dot(row, column) })
+        })
+
+      from_rows(result)
+    }
   }
 }
