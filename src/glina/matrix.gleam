@@ -11,6 +11,7 @@ pub type MatrixError {
   RowIndexOutOfBounds(Int)
   ColumnIndexOutOfBounds(Int)
   DimensionMismatch(Int, Int)
+  NegativeSize(Int)
 }
 
 fn dot(l1: List(Float), l2: List(Float)) -> Float {
@@ -128,6 +129,17 @@ pub fn multiply(m1: Matrix, m2: Matrix) -> Result(Matrix, MatrixError) {
         })
 
       from_rows(result)
+    }
+  }
+}
+
+pub fn zeros(n: Int) -> Result(Matrix, MatrixError) {
+  case n < 0 {
+    True -> Error(NegativeSize(n))
+    False -> {
+      let zero_row = list.repeat(0.0, n)
+      let rows = list.repeat(zero_row, n)
+      from_rows(rows)
     }
   }
 }
