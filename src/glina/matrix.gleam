@@ -1,3 +1,4 @@
+import gleam/int
 import gleam/list
 
 pub opaque type Matrix {
@@ -139,6 +140,27 @@ pub fn zeros(n: Int) -> Result(Matrix, MatrixError) {
     False -> {
       let zero_row = list.repeat(0.0, n)
       let rows = list.repeat(zero_row, n)
+      from_rows(rows)
+    }
+  }
+}
+
+pub fn identity(n: Int) -> Result(Matrix, MatrixError) {
+  case n < 0 {
+    True -> Error(NegativeSize(n))
+    False -> {
+      let zero_row = list.repeat(0.0, n)
+      let zero_rows = list.repeat(zero_row, n)
+
+      let rows =
+        list.index_map(zero_rows, fn(row, row_index) {
+          list.index_map(row, fn(_, column_index) {
+            case row_index == column_index {
+              True -> 1.0
+              False -> 0.0
+            }
+          })
+        })
       from_rows(rows)
     }
   }
