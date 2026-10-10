@@ -167,3 +167,42 @@ pub fn matrix_multiply_returns_error_for_incompatible_dimensions_test() {
 
   assert matrix.multiply(m1, m2) == Error(matrix.DimensionMismatch(2, 3))
 }
+
+pub fn zeros_creates_square_matrix_test() {
+  let n = 3
+
+  let assert Ok(mat) = matrix.zeros(n)
+
+  let assert Ok(first) = matrix.get_row(mat, 0)
+  let assert Ok(second) = matrix.get_row(mat, 1)
+  let assert Ok(third) = matrix.get_row(mat, 2)
+
+  assert first == [0.0, 0.0, 0.0]
+  assert second == [0.0, 0.0, 0.0]
+  assert third == [0.0, 0.0, 0.0]
+}
+
+pub fn zeros_rejects_negative_size_test() {
+  let n = -1
+
+  assert matrix.zeros(n) == Error(matrix.NegativeSize(-1))
+}
+
+pub fn identity_creates_identity_matrix_test() {
+  let n = 3
+
+  let assert Ok(mat) = matrix.identity(n)
+
+  let assert Ok(first) = matrix.get_row(mat, 0)
+  let assert Ok(second) = matrix.get_row(mat, 1)
+  let assert Ok(third) = matrix.get_row(mat, 2)
+
+  assert first == [1.0, 0.0, 0.0]
+  assert second == [0.0, 1.0, 0.0]
+  assert third == [0.0, 0.0, 1.0]
+}
+pub fn identity_rejects_negative_size_test() {
+  let n = -1
+
+  assert matrix.identity(n) == Error(matrix.NegativeSize(-1))
+}
