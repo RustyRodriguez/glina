@@ -1,4 +1,3 @@
-import gleam/int
 import gleam/list
 
 pub opaque type Matrix {
@@ -161,6 +160,34 @@ pub fn identity(n: Int) -> Result(Matrix, MatrixError) {
             }
           })
         })
+      from_rows(rows)
+    }
+  }
+}
+
+pub fn diagonal(values: List(Float)) -> Result(Matrix, MatrixError) {
+  let n = list.length(values)
+
+  case list.is_empty(values) {
+    True -> Error(EmptyMatrix([]))
+    False -> {
+      let zero_row = list.repeat(0.0, n)
+      let zero_rows = list.repeat(zero_row, n)
+
+      let rows =
+        list.index_map(zero_rows, fn(row, row_index) {
+          list.index_map(row, fn(_, column_index) {
+            case row_index == column_index {
+              True ->
+                case list.drop(values, row_index) {
+                  [diagonal_value, ..] -> diagonal_value
+                  [] -> 0.0
+                }
+              False -> 0.0
+            }
+          })
+        })
+
       from_rows(rows)
     }
   }
