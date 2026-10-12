@@ -11,6 +11,7 @@ pub type MatrixError {
   RowIndexOutOfBounds(Int)
   ColumnIndexOutOfBounds(Int)
   DimensionMismatch(Int, Int)
+  NegativeSize(Int)
 }
 
 fn dot(l1: List(Float), l2: List(Float)) -> Float {
@@ -128,6 +129,66 @@ pub fn multiply(m1: Matrix, m2: Matrix) -> Result(Matrix, MatrixError) {
         })
 
       from_rows(result)
+    }
+  }
+}
+
+pub fn zeros(n: Int) -> Result(Matrix, MatrixError) {
+  case n < 0 {
+    True -> Error(NegativeSize(n))
+    False -> {
+      let zero_row = list.repeat(0.0, n)
+      let rows = list.repeat(zero_row, n)
+      from_rows(rows)
+    }
+  }
+}
+
+pub fn identity(n: Int) -> Result(Matrix, MatrixError) {
+  case n < 0 {
+    True -> Error(NegativeSize(n))
+    False -> {
+      let zero_row = list.repeat(0.0, n)
+      let zero_rows = list.repeat(zero_row, n)
+
+      let rows =
+        list.index_map(zero_rows, fn(row, row_index) {
+          list.index_map(row, fn(_, column_index) {
+            case row_index == column_index {
+              True -> 1.0
+              False -> 0.0
+            }
+          })
+        })
+      from_rows(rows)
+    }
+  }
+}
+
+pub fn diagonal(values: List(Float)) -> Result(Matrix, MatrixError) {
+  let n = list.length(values)
+
+  case list.is_empty(values) {
+    True -> Error(EmptyMatrix([]))
+    False -> {
+      let zero_row = list.repeat(0.0, n)
+      let zero_rows = list.repeat(zero_row, n)
+
+      let rows =
+        list.index_map(zero_rows, fn(row, row_index) {
+          list.index_map(row, fn(_, column_index) {
+            case row_index == column_index {
+              True ->
+                case list.drop(values, row_index) {
+                  [diagonal_value, ..] -> diagonal_value
+                  [] -> 0.0
+                }
+              False -> 0.0
+            }
+          })
+        })
+
+      from_rows(rows)
     }
   }
 }
