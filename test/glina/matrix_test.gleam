@@ -227,3 +227,57 @@ pub fn diagonal_rejects_empty_values_test() {
 
   assert matrix.diagonal(values) == Error(matrix.EmptyMatrix([]))
 }
+
+pub fn add_returns_sum_of_matrices_test() {
+  let assert Ok(m1) = matrix.from_rows([[1.0, 2.0, 3.0], [3.0, 4.0, 5.0]])
+  let assert Ok(m2) = matrix.from_rows([[2.0, 1.0, 7.0], [6.0, 5.0, 1.0]])
+  let assert Ok(expected) =
+    matrix.from_rows([[3.0, 3.0, 10.0], [9.0, 9.0, 6.0]])
+
+  let assert Ok(mat_sum) = matrix.add(m1, m2)
+
+  assert mat_sum == expected
+}
+
+pub fn add_returns_error_for_mismatched_rows_test() {
+  let assert Ok(m1) =
+    matrix.from_rows([[1.0, 2.0, 3.0], [3.0, 4.0, 5.0], [1.0, 2.0, 3.0]])
+  let assert Ok(m2) = matrix.from_rows([[2.0, 1.0, 7.0], [6.0, 5.0, 1.0]])
+
+  assert matrix.add(m1, m2) == Error(matrix.DimensionMismatch(3, 2))
+}
+
+pub fn add_returns_error_for_mismatched_columns_test() {
+  let assert Ok(m1) = matrix.from_rows([[1.0, 2.0, 3.0], [3.0, 4.0, 5.0]])
+  let assert Ok(m2) =
+    matrix.from_rows([[2.0, 1.0, 7.0, 8.0], [6.0, 5.0, 1.0, 6.0]])
+
+  assert matrix.add(m1, m2) == Error(matrix.DimensionMismatch(3, 4))
+}
+
+pub fn subtract_returns_difference_of_matrices_test() {
+  let assert Ok(m1) = matrix.from_rows([[1.0, 2.0, 3.0], [3.0, 4.0, 5.0]])
+  let assert Ok(m2) = matrix.from_rows([[2.0, 1.0, 7.0], [6.0, 5.0, 1.0]])
+  let assert Ok(expected) =
+    matrix.from_rows([[-1.0, 1.0, -4.0], [-3.0, -1.0, 4.0]])
+
+  let assert Ok(mat_difference) = matrix.subtract(m1, m2)
+
+  assert mat_difference == expected
+}
+
+pub fn subtract_returns_error_for_mismatched_rows_test() {
+  let assert Ok(m1) =
+    matrix.from_rows([[1.0, 2.0, 3.0], [3.0, 4.0, 5.0], [1.0, 2.0, 3.0]])
+  let assert Ok(m2) = matrix.from_rows([[2.0, 1.0, 7.0], [6.0, 5.0, 1.0]])
+
+  assert matrix.subtract(m1, m2) == Error(matrix.DimensionMismatch(3, 2))
+}
+
+pub fn subtract_returns_error_for_mismatched_columns_test() {
+  let assert Ok(m1) = matrix.from_rows([[1.0, 2.0, 3.0], [3.0, 4.0, 5.0]])
+  let assert Ok(m2) =
+    matrix.from_rows([[2.0, 1.0, 7.0, 8.0], [6.0, 5.0, 1.0, 6.0]])
+
+  assert matrix.subtract(m1, m2) == Error(matrix.DimensionMismatch(3, 4))
+}
