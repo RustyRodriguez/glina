@@ -192,3 +192,45 @@ pub fn diagonal(values: List(Float)) -> Result(Matrix, MatrixError) {
     }
   }
 }
+
+pub fn add(m1: Matrix, m2: Matrix) -> Result(Matrix, MatrixError) {
+  let #(m1_rows, m1_columns) = shape(m1)
+  let #(m2_rows, m2_columns) = shape(m2)
+
+  case m1_rows != m2_rows {
+    True -> Error(DimensionMismatch(m1_rows, m2_rows))
+    False ->
+      case m1_columns != m2_columns {
+        True -> Error(DimensionMismatch(m1_columns, m2_columns))
+        False -> {
+          let rows =
+            list.map2(m1.rows, m2.rows, fn(row1, row2) {
+              list.map2(row1, row2, fn(value1, value2) { value1 +. value2 })
+            })
+
+          from_rows(rows)
+        }
+      }
+  }
+}
+
+pub fn subtract(m1: Matrix, m2: Matrix) -> Result(Matrix, MatrixError) {
+  let #(m1_rows, m1_columns) = shape(m1)
+  let #(m2_rows, m2_columns) = shape(m2)
+
+  case m1_rows != m2_rows {
+    True -> Error(DimensionMismatch(m1_rows, m2_rows))
+    False ->
+      case m1_columns != m2_columns {
+        True -> Error(DimensionMismatch(m1_columns, m2_columns))
+        False -> {
+          let rows =
+            list.map2(m1.rows, m2.rows, fn(row1, row2) {
+              list.map2(row1, row2, fn(value1, value2) { value1 -. value2 })
+            })
+
+          from_rows(rows)
+        }
+      }
+  }
+}
