@@ -281,3 +281,20 @@ pub fn subtract_returns_error_for_mismatched_columns_test() {
 
   assert matrix.subtract(m1, m2) == Error(matrix.DimensionMismatch(3, 4))
 }
+
+pub fn scale_multiplies_each_matrix_element_test() {
+  let assert Ok(mat) = matrix.from_rows([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+
+  let assert Ok(expected) =
+    matrix.from_rows([[2.0, 4.0, 6.0], [8.0, 10.0, 12.0]])
+
+  assert matrix.scale(mat, 2.0) == expected
+}
+
+pub fn scale_with_zero_factor_returns_zero_matrix_test() {
+  let assert Ok(mat) = matrix.from_rows([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+
+  let assert Ok(expected) = matrix.from_rows([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
+
+  assert matrix.scale(mat, 0.0) == expected
+}

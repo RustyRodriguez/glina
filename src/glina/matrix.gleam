@@ -234,3 +234,10 @@ pub fn subtract(m1: Matrix, m2: Matrix) -> Result(Matrix, MatrixError) {
       }
   }
 }
+
+pub fn scale(mat: Matrix, factor: Float) -> Matrix {
+  let scaled_rows =
+    list.map(mat.rows, fn(row) { list.map(row, fn(value) { value *. factor }) })
+
+  Matrix(scaled_rows)
+}
